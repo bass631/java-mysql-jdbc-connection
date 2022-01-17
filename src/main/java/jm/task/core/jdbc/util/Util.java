@@ -1,5 +1,12 @@
 package jm.task.core.jdbc.util;
 
+import jm.task.core.jdbc.model.User;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,16 +16,55 @@ public class Util {
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root12345";
 
-    public static Connection connectionToDB() {
-        Connection connection = null;
-        {
-            try {
-                connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-                System.out.println("Connection to DataBase was successful!");
-            } catch (SQLException ex) {
-                System.out.println("JDBC driver is not found!" + '\'' + ex);
-            }
+    /////////////////// JDBCUtil /////////////////////
+
+    private static Connection connection;
+
+    static {
+
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            System.out.println("Connection to DataBase was successful!");
+        } catch (SQLException ex) {
+            System.out.println("JDBC driver is not found!\n" + ex);
         }
+    }
+
+    public static Connection getConnectionJDBC() {
         return connection;
+    }
+
+
+    /////////////////// HibernateUtil /////////////////////
+
+    private static SessionFactory sessionFactory;
+
+    static {
+
+        Configuration configuration = new Configuration()
+                .setProperty(Environment.DRIVER, "com.mysql.cj.jdbc.Driver")
+                .setProperty(Environment.URL, URL)
+                .setProperty(Environment.USER, USERNAME)
+                .setProperty(Environment.PASS, PASSWORD)
+                .setProperty(Environment.DIALECT, "org.hibernate.dialect.MySQLDialect")
+                .setProperty(Environment.SHOW_SQL, "true")
+                .setProperty(Environment.HBM2DDL_AUTO, "none");
+
+        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder() //получение реестра и сервисов
+                .applySettings(configuration.getProperties())     //настройка подключения
+                .build();
+        try {
+            sessionFactory = configuration
+                    .addAnnotatedClass(User.class)
+                    .buildSessionFactory(registry);
+            System.out.println("Connection to DataBase was successful!");
+        } catch (Exception ex) {
+            System.out.println("The sessionFactory had trouble building\n" + ex);
+            StandardServiceRegistryBuilder.destroy(registry);
+        }
+    }
+
+    public static SessionFactory getSessionFactory() {
+        return sessionFactory;
     }
 }
