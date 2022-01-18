@@ -24,9 +24,18 @@ public class Util {
 
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("Connection to DataBase was successful!");
+            System.out.println("Connection to DataBase was successful(JDBL)!");
+            System.out.println(connection.isClosed());
         } catch (SQLException ex) {
             System.out.println("JDBC driver is not found!\n" + ex);
+        }
+    }
+
+    public static void test() {
+        try {
+            System.out.println("connection closed? " + connection.isClosed());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -35,7 +44,7 @@ public class Util {
     }
 
 
-    /////////////////// HibernateUtil /////////////////////
+/////////////////// HibernateUtil /////////////////////
 
     private static SessionFactory sessionFactory;
 
@@ -57,7 +66,8 @@ public class Util {
             sessionFactory = configuration
                     .addAnnotatedClass(User.class)
                     .buildSessionFactory(registry);
-            System.out.println("Connection to DataBase was successful!");
+            System.out.println("Connection to DataBase was successful(SF)!");
+            System.out.println(sessionFactory.isClosed());
         } catch (Exception ex) {
             System.out.println("The sessionFactory had trouble building\n" + ex);
             StandardServiceRegistryBuilder.destroy(registry);
@@ -67,4 +77,16 @@ public class Util {
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
+
+    public static void closeConnection() {
+        try {
+            connection.close();
+            sessionFactory.close();
+            System.out.println("Was JDBC connection closed? " + connection.isClosed());
+            System.out.println("Was SessionFactory closed? " + sessionFactory.isClosed());
+        } catch (SQLException ex) {
+            System.out.println("Close connection exception!\n" + ex);
+        }
+    }
+
 }
