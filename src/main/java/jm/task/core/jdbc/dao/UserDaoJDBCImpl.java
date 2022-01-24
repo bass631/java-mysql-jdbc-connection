@@ -23,41 +23,94 @@ public class UserDaoJDBCImpl implements UserDao {
     private static final String CLEAN_TABLE = "TRUNCATE TABLE User";
 
     private static final Connection connection = new Util().getConnectionJDBC();
+    private static PreparedStatement preparedStatement = null;
 
     public void createUsersTable() {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TABLE)) {
+        try {
+            preparedStatement = connection.prepareStatement(CREATE_TABLE);
             preparedStatement.execute();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Table was not created!\n" + e);
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                System.err.println("There was an error making a rollback\n" + ex);
+            }
+        } finally {
+            try {
+                preparedStatement.close();
+                connection.close();
+            } catch (SQLException ex) {
+                System.err.println("There was an error making a connection close\n" + ex);
+            }
         }
     }
 
     public void dropUsersTable() {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(DROP_TABLE)) {
+        try {
+            preparedStatement = connection.prepareStatement(DROP_TABLE);
             preparedStatement.execute();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Table was not dropped!\n" + e);
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                System.err.println("There was an error making a rollback\n" + ex);
+            }
+        } finally {
+            try {
+                preparedStatement.close();
+                connection.close();
+            } catch (SQLException ex) {
+                System.err.println("There was an error making a connection close\n" + ex);
+            }
         }
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SAVE_USER)) {
+        try {
+            preparedStatement = connection.prepareStatement(SAVE_USER);
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setInt(3, age);
             preparedStatement.execute();
             System.out.println("User с именем – " + name + " добавлен в базу данных");
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("User was not added!\n" + e);
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                System.err.println("There was an error making a rollback\n" + ex);
+            }
+        } finally {
+            try {
+                preparedStatement.close();
+                connection.close();
+            } catch (SQLException ex) {
+                System.err.println("There was an error making a connection close\n" + ex);
+            }
         }
     }
 
     public void removeUserById(long id) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_USER)) {
+        try {
+            preparedStatement = connection.prepareStatement(REMOVE_USER);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("User was not removed!\n" + e);
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                System.err.println("There was an error making a rollback\n" + ex);
+            }
+        } finally {
+            try {
+                preparedStatement.close();
+                connection.close();
+            } catch (SQLException ex) {
+                System.err.println("There was an error making a connection close\n" + ex);
+            }
         }
     }
 
@@ -70,18 +123,43 @@ public class UserDaoJDBCImpl implements UserDao {
                 user.setId(rs.getLong("id"));
                 list.add(user);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Users were not get!\n" + e);
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                System.err.println("There was an error making a rollback\n" + ex);
+            }
+        } finally {
+            try {
+                preparedStatement.close();
+                connection.close();
+            } catch (SQLException ex) {
+                System.err.println("There was an error making a connection close\n" + ex);
+            }
         }
 //        System.out.println(list);
         return list;
     }
 
     public void cleanUsersTable() {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(CLEAN_TABLE)){
+        try {
+            preparedStatement = connection.prepareStatement(CLEAN_TABLE);
             preparedStatement.execute();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Table was not cleaned!\n" + e);
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                System.err.println("There was an error making a rollback\n" + ex);
+            }
+        } finally {
+            try {
+                preparedStatement.close();
+                connection.close();
+            } catch (SQLException ex) {
+                System.err.println("There was an error making a connection close\n" + ex);
+            }
         }
     }
 }

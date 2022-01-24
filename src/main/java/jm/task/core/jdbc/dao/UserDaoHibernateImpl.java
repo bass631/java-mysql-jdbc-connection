@@ -18,46 +18,48 @@ public class UserDaoHibernateImpl implements UserDao {
     private static final String DROP_TABLE = "DROP TABLE IF EXISTS User";
 
     private static final SessionFactory sessionFactory = new Util().getSessionFactory();
+    private static Session session = null;
 
     @Override
     public void createUsersTable() {
-        Session session = null;
         try {
             session = sessionFactory.openSession();
             session.beginTransaction();
             session.createSQLQuery(CREATE_TABLE).executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
-            if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
-                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK) {
+            if (session != null && (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
+                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
                 session.getTransaction().rollback();
             }
         } finally {
-            session.close();
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     @Override
     public void dropUsersTable() {
-        Session session = null;
         try {
             session = sessionFactory.openSession();
             session.beginTransaction();
             session.createSQLQuery(DROP_TABLE).executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
-            if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
-                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK) {
+            if (session != null && (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
+                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
                 session.getTransaction().rollback();
             }
         } finally {
-            session.close();
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        Session session = null;
         try {
             session = sessionFactory.openSession();
             session.beginTransaction();
@@ -65,18 +67,19 @@ public class UserDaoHibernateImpl implements UserDao {
             session.getTransaction().commit();
             System.out.println("User с именем – " + name + " добавлен в базу данных");
         } catch (Exception e) {
-            if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
-                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK) {
+            if (session != null && (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
+                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
                 session.getTransaction().rollback();
             }
         } finally {
-            session.close();
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     @Override
     public void removeUserById(long id) {
-        Session session = null;
         try {
             session = sessionFactory.openSession();
             session.beginTransaction();
@@ -84,50 +87,54 @@ public class UserDaoHibernateImpl implements UserDao {
             session.delete(user);
             session.getTransaction().commit();
         } catch (Exception e) {
-            if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
-                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK) {
+            if (session != null && (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
+                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
                 session.getTransaction().rollback();
             }
         } finally {
-            session.close();
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     @Override
     public List<User> getAllUsers() {
         List<User> list = new ArrayList<>();
-        Session session = null;
         try {
             session = sessionFactory.openSession();
             session.beginTransaction();
-            list = session.createQuery("select q from User q", User.class).getResultList();
+            list = session.createQuery("SELECT q FROM User q", User.class).getResultList();
             session.getTransaction().commit();
         } catch (Exception e) {
-            if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
-                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK) {
+            if (session != null && (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
+                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
                 session.getTransaction().rollback();
             }
         } finally {
-            session.close();
-            return list;
+            if (session != null) {
+                session.close();
+            }
         }
+        return list;
     }
 
     @Override
     public void cleanUsersTable() {
-        Session session = null;
         try {
             session = sessionFactory.openSession();
             session.beginTransaction();
-            session.createQuery("delete from User").executeUpdate();
+            session.createQuery("DELETE FROM User").executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
-            if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
-                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK) {
+            if (session != null && (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
+                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
                 session.getTransaction().rollback();
             }
         } finally {
-            session.close();
+            if (session != null) {
+                session.close();
+            }
         }
     }
 }
