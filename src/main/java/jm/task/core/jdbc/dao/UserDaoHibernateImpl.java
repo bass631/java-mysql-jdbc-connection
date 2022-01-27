@@ -17,7 +17,7 @@ public class UserDaoHibernateImpl implements UserDao {
     private static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS User (id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT, name VARCHAR(64), lastName VARCHAR(64), age TINYINT)";
     private static final String DROP_TABLE = "DROP TABLE IF EXISTS User";
 
-    private static final SessionFactory sessionFactory = new Util().getSessionFactory();
+    private static final SessionFactory sessionFactory = Util.getSessionFactory();
     private static Session session = null;
 
     @Override

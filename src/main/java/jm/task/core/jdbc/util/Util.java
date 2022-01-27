@@ -25,6 +25,7 @@ public class Util {
 
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            connection.setAutoCommit(false);
             System.out.println("Connection to DataBase was successful(JDBL)!");
             System.out.println(connection.isClosed());
         } catch (SQLException ex) {
