@@ -1,6 +1,6 @@
-package jm.task.core.jdbc.util;
+package jdbc.util;
 
-import jm.task.core.jdbc.model.User;
+import jdbc.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;

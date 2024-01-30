@@ -1,7 +1,7 @@
-package jm.task.core.jdbc.dao;
+package jdbc.dao;
 
-import jm.task.core.jdbc.model.User;
-import jm.task.core.jdbc.util.ConnectionUtil;
+import jdbc.model.User;
+import jdbc.util.ConnectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
