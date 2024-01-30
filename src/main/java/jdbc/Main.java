@@ -1,7 +1,7 @@
-package jm.task.core.jdbc;
+package jdbc;
 
-import jm.task.core.jdbc.service.UserServiceImpl;
-import jm.task.core.jdbc.util.ConnectionUtil;
+import jdbc.service.UserServiceImpl;
+import jdbc.util.ConnectionUtil;
 
 public class Main {
     public static void main(String[] args) {

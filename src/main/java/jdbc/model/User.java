@@ -1,4 +1,4 @@
-package jm.task.core.jdbc.model;
+package jdbc.model;
 
 import lombok.*;
 
